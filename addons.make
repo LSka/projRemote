@@ -1,0 +1,5 @@
+ofxXmlSettings
+ofxNetwork
+ofxPoco
+ofxPJControl
+ofxTiming
