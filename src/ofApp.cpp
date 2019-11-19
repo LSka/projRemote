@@ -128,6 +128,7 @@ void ofApp::update(){
             }
             else if (playhead < soundsDir.size()){
                 sound.load(soundsDir.getPath(playhead));
+                system("amixer sset Master 100%,0%");
                 sound.play();
             }
         }
@@ -189,7 +190,8 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    if (videoStarted){
+    ofHideCursor();
+    if (videoStarted && !video.isPaused()){
 
         mainAlpha = 255;
         videoTexture = video.getTexture();
@@ -278,6 +280,7 @@ void ofApp::drawProjector(ofEventArgs & args){
 void ofApp::keyPressed(int key){
     switch(key){
         case ' ':
+            system("amixer sset Master 0%,100%");
             playVideo();
     break;
         case 's':
@@ -299,6 +302,7 @@ void ofApp::keyPressed(int key){
                 videoVolumeTimer.setTarget(0.1f);
                 videoVolumeTimer.start();
                 sound.load(soundsDir.getPath(playhead));
+                system("amixer sset Master 100%,0%");
                 sound.play();
                 bellState = 1;
             }
