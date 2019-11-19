@@ -321,10 +321,9 @@ void ofApp::keyPressed(int key){
             sound.stop();
             sound.unload();
             playhead--;
+            playhead = ofClamp(playhead, 0, soundsDir.size()-1);
             bellState = 0;
-            if (playhead >= soundsDir.size()){
-                playhead = 0;
-            }
+
             break;
         case 'c':
             sound.stop();
