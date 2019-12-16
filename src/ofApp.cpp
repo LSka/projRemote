@@ -128,7 +128,7 @@ void ofApp::update(){
             }
             else if (playhead < soundsDir.size()){
                 sound.load(soundsDir.getPath(playhead));
-                system("amixer sset Master 100%,0%");
+                system("amixer sset Master 0%,100%");
                 sound.play();
             }
         }
@@ -280,7 +280,7 @@ void ofApp::drawProjector(ofEventArgs & args){
 void ofApp::keyPressed(int key){
     switch(key){
         case ' ':
-            system("amixer sset Master 0%,100%");
+            system("amixer sset Master 100%,0%");
             playVideo();
     break;
         case 's':
@@ -288,10 +288,10 @@ void ofApp::keyPressed(int key){
             videoStarted = false;
             fadeFrames = 0;
     break;
-        case 'q':
+        case 'w':
             projector.On();
             break;
-        case 'w':
+        case 'q':
             projector.Off();
             break;
         case 'z':
@@ -302,7 +302,7 @@ void ofApp::keyPressed(int key){
                 videoVolumeTimer.setTarget(0.1f);
                 videoVolumeTimer.start();
                 sound.load(soundsDir.getPath(playhead));
-                system("amixer sset Master 100%,0%");
+                system("amixer sset Master 0%,100%");
                 sound.play();
                 bellState = 1;
             }
@@ -337,6 +337,12 @@ void ofApp::keyPressed(int key){
     case 'a':
         mainFade.start();
         break;
+
+   case 'p':
+	sound.stop();
+	bellState = 0;
+	playhead = 0;
+	break;
 
     }
     
