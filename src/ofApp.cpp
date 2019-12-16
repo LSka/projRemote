@@ -217,7 +217,7 @@ void ofApp::draw(){
     ofSetColor(0, 0, 0,128);
     ofDrawRectRounded(mainWindowWidth * 0.8f, mainWindowHeight * 0.05f, mainWindowWidth * 0.135f, mainWindowHeight * 0.07f, 10);
     ofDrawRectRounded(mainWindowWidth * 0.08f, mainWindowHeight * 0.75f, mainWindowWidth * 0.84f, mainWindowHeight * 0.16f, 10);
-    ofDrawRectRounded(mainWindowWidth * 0.1f, mainWindowHeight * 0.65f, mainWindowWidth * 0.3f, mainWindowHeight *0.05f, 10);
+    ofDrawRectRounded(mainWindowWidth * 0.1f, mainWindowHeight * 0.65f, mainWindowWidth * 0.4f, mainWindowHeight *0.05f, 10);
     
     ofSetColor(255,255,255,255);
     string now = ofToString(ofGetHours(),0,2,'0')+":"+ofToString(ofGetMinutes(),0,2,'0')+":"+ofToString(ofGetSeconds(),0,2,'0');
@@ -244,12 +244,12 @@ void ofApp::draw(){
     ofRectangle soundProgress;
     soundProgress.x = mainWindowWidth*0.1f;
     soundProgress.y = mainWindowHeight * 0.65f;
-    soundProgress.width = mainWindowWidth * (sound.getPosition()) * 0.3f;
-    soundProgress.height = mainWindowHeight * 0.05f;
+    soundProgress.width = mainWindowWidth * (sound.getPosition()) * 0.4f;
+    soundProgress.height = mainWindowHeight * 0.06f;
     
     ofSetColor(255,255,255,255);
     ofNoFill();
-    ofDrawRectangle(soundProgress.x,soundProgress.y,mainWindowWidth * 0.3f,soundProgress.height);
+    ofDrawRectangle(soundProgress.x,soundProgress.y,mainWindowWidth * 0.4f,soundProgress.height);
     ofSetColor(255,255,255,128);
     ofFill();
     ofDrawRectangle(soundProgress);
