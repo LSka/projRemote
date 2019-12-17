@@ -57,7 +57,7 @@ void ofApp::setup(){
     //load the video files
     string videoPath = settings.getValue("VIDEOS:PATH","video");
     videoDir.open(videoPath);
-    videoDir.allowExt("mov");
+    videoDir.allowExt("mp4");
     videoDir.listDir();
     videoDir.sort();
     
