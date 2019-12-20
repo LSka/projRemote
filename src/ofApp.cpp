@@ -71,6 +71,8 @@ void ofApp::setup(){
         float d = vid.getDuration();
         globalDuration += d;
     }
+    position = 0;
+    playlistPosition = 0;
     
     videoTexture.allocate(1920,1080,GL_RGBA);
     mainAlpha = 0;
@@ -96,7 +98,7 @@ void ofApp::setup(){
     fadeInTime = settings.getValue("FADEINTIME",120);
     
     //set the global opacity to 0
-    mainAlpha = 0;
+    mainAlpha = 255;
 
     mainFade.setDuration(fadeInTime);
     mainFade.setBeginning(0);
@@ -175,9 +177,11 @@ void ofApp::update(){
         //if there are none, go to black and restart the carousel
             else{
                 videoStarted = false;
-                mainAlpha = 0;
+                mainAlpha = 255;
                 fadeFrames = 0;
                 imagesPosition = 0;
+                position = 0;
+                playlistPosition = 0;
             }
 
 
