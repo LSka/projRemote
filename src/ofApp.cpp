@@ -272,7 +272,7 @@ void ofApp::draw(){
     
     progressBar.x = mainWindowWidth * 0.1f;
     progressBar.y = mainWindowHeight * 0.8f;
-    progressBar.width = mainWindowWidth * position * 0.8f;
+    progressBar.width = mainWindowWidth * ( ( playlistPosition + position ) / videoDir.size() )* 0.8f;
     progressBar.height = mainWindowHeight * 0.1f;
     
     ofSetColor(255,255,255,255);
