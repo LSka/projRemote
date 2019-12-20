@@ -33,6 +33,7 @@ void ofApp::setup(){
     string imgPath = settings.getValue("IMAGES:PATH","images");
     ofDirectory imgDir(imgPath);
     imgDir.allowExt("png");
+    imgDir.allowExt("jpg");
     imgDir.listDir();
     imgDir.sort();
     for (unsigned int i = 0; i < imgDir.size(); i++){
@@ -75,13 +76,12 @@ void ofApp::setup(){
     playlistPosition = 0;
     
     videoTexture.allocate(1920,1080,GL_RGBA);
-    mainAlpha = 0;
     fadeFrames = 0;
     
     //Allocate the Fbo where the images will be mixed
     imagesFbo.allocate(1920, 1080,GL_RGBA);
     imagesFbo.begin();
-    ofClear(255,255,255,0);
+    ofClear(255,255,255,255);
     imagesFbo.end();
     
     videoStarted = false;
@@ -97,8 +97,7 @@ void ofApp::setup(){
     xFadeTime = settings.getValue("IMAGES:XFADETIME",240);
     fadeInTime = settings.getValue("FADEINTIME",120);
     
-    //set the global opacity to 0
-    mainAlpha = 255;
+    //set the global opacity to 255
 
     mainFade.setDuration(fadeInTime);
     mainFade.setBeginning(0);
@@ -177,8 +176,6 @@ void ofApp::update(){
         //if there are none, go to black and restart the carousel
             else{
                 videoStarted = false;
-                mainAlpha = 255;
-                fadeFrames = 0;
                 imagesPosition = 0;
                 position = 0;
                 playlistPosition = 0;
@@ -210,21 +207,14 @@ void ofApp::draw(){
     ofHideCursor();
     if (videoStarted && !video.isPaused()){
 
-        mainAlpha = 255;
         videoTexture = video.getTexture();
     }
     else {
         videoTexture = imagesFbo.getTexture();
     }
     
-    //The master fade in
-/*    if (fadeFrames < fadeInTime){
-        mainAlpha = ofMap(fadeFrames,0,fadeInTime,0,255);
-        fadeFrames++;
-    }
-  */
-    mainAlpha = mainFade.getValue();
-    ofSetColor(255,255,255,mainAlpha); //this is to fade the master texture
+
+    ofSetColor(255,255,255,255); //this is to fade the master texture
     videoTexture.draw(0,0,mainWindowWidth,mainWindowHeight);
     
     //Draw the GUI and the OSD
@@ -232,7 +222,7 @@ void ofApp::draw(){
     
     
     ofSetColor(0, 0, 0,128);
-    ofDrawRectRounded(mainWindowWidth * 0.8f, mainWindowHeight * 0.05f, mainWindowWidth * 0.135f, mainWindowHeight * 0.07f, 10);
+    ofDrawRectRounded(mainWindowWidth * 0.8f, mainWindowHeight * 0.05f, mainWindowWidth * 0.145f, mainWindowHeight * 0.07f, 10);
     ofDrawRectRounded(mainWindowWidth * 0.08f, mainWindowHeight * 0.75f, mainWindowWidth * 0.84f, mainWindowHeight * 0.16f, 10);
     ofDrawRectRounded(mainWindowWidth * 0.1f, mainWindowHeight * 0.65f, mainWindowWidth * 0.4f, mainWindowHeight *0.05f, 10);
     
@@ -285,11 +275,12 @@ void ofApp::draw(){
     ofSetColor(255,255,255,128);
     ofFill();
     ofDrawRectangle(progressBar);
+    ofSetColor(255,255,255,255);
 
 }
 
 void ofApp::drawProjector(ofEventArgs & args){
-    ofSetColor(255,255,255,mainAlpha);
+    ofSetColor(255,255,255,255);
     videoTexture.draw(0,0,projectorWindowWidth,projectorWindowHeight);
 }
 
