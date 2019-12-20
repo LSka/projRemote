@@ -312,6 +312,7 @@ void ofApp::keyPressed(int key){
                     bellState = 2;
                 }
                 else if (bellState == 2){
+		system("amixer sset Master 0%,100%");
                     sound.setPaused(false);
                     bellState = 1;
                 }
@@ -360,13 +361,15 @@ void ofApp::playVideo(){
         string vP = ofToDataPath(videoDir.getPath(playlistPosition),true);//NOTE: only the first video in the folder gets loaded
         video.load(vP);
         video.setLoopState(OF_LOOP_NONE);
-        video.play();
+        system("amixer sset Master 100%,0%");
+	video.play();
         videoStarted = true;
     }
     else if(!video.isPaused()){
         video.setPaused(true);
     }
     else if(video.isPaused()){
+	system("amixer sset Master 100%,0%");
         video.setPaused(false);
     }
 }
