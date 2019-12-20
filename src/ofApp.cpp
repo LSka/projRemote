@@ -60,6 +60,17 @@ void ofApp::setup(){
     videoDir.allowExt("mp4");
     videoDir.listDir();
     videoDir.sort();
+
+    //compute global video duration
+    globalDuration = 0;
+    oldElapsed = 0;
+    for (unsigned int v = 0; v < videoDir.size(); v++){
+        string vP = ofToDataPath(videoDir.getPath(v),true);
+        ofVideoPlayer vid;
+        vid.load(vP);
+        float d = vid.getDuration();
+        globalDuration += d;
+    }
     
     videoTexture.allocate(1920,1080,GL_RGBA);
     mainAlpha = 0;
@@ -141,17 +152,19 @@ void ofApp::update(){
         //compute and prepare the elapsed and remaining video time (using the timeFormat method)
         duration = video.getDuration();
         position = video.getPosition();
-        float elapsedVideoTime = position*duration;
-        float remainingVideoTime = duration - elapsedVideoTime;
+        elapsedVideoTime = position*duration;
+        globalElapsed = oldElapsed + elapsedVideoTime;
+        float remainingVideoTime = globalDuration - globalElapsed;
         if(remainingVideoTime >= INFINITY || remainingVideoTime < 0){
             remainingVideoTime = 0;
         }
-        elapsedTime = timeFormat(elapsedVideoTime);
+        elapsedTime = timeFormat(globalElapsed);
         remainingTime = timeFormat(remainingVideoTime);
         
         
         if (video.getIsMovieDone()){
             //load and play next video
+            oldElapsed = globalElapsed;
             playlistPosition++;
             if (playlistPosition < videoDir.size()){
                 string vP = ofToDataPath(videoDir.getPath(playlistPosition),true);

@@ -40,6 +40,10 @@ public:
     float projectorWindowHeight;
     float duration;
     float position;
+    float elapsedVideoTime;
+    float globalElapsed;
+    float globalDuration;
+    float oldElapsed;
     float leftMargin;
     float rightMargin;
     float topMargin;
