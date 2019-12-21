@@ -43,6 +43,10 @@ void ofApp::setup(){
     }
     imagesPosition = 0;
     currentImage = &images[imagesPosition];
+
+    //load the logo
+    logo.load("logo.png");
+    displayLogo = false;
     
     
     //load the audio files
@@ -176,6 +180,7 @@ void ofApp::update(){
         //if there are none, go to black and restart the carousel
             else{
                 videoStarted = false;
+                displayLogo = true;
                 imagesPosition = 0;
                 position = 0;
                 playlistPosition = 0;
@@ -185,6 +190,9 @@ void ofApp::update(){
         }
     }
     else{
+        if (displayLogo){
+            currentImage = &logo;
+        }
         imagesFbo.begin();
         currentImage->draw(0,0,imagesFbo.getWidth(),imagesFbo.getHeight());
         imagesFbo.end();
@@ -290,6 +298,7 @@ void ofApp::keyPressed(int key){
         case ' ':
             system("amixer sset Master 100%,0%");
             playVideo();
+            displayLogo = false;
     break;
         case 's':
             video.stop();
@@ -363,6 +372,7 @@ void ofApp::keyPressed(int key){
 
 
 void ofApp::playVideo(){
+    displayLogo = false;
     if (!videoStarted){
         //load the video
         playlistPosition = 0;

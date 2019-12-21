@@ -25,7 +25,7 @@ public:
     
     ofPath soundsPath;
     vector<ofImage> images;
-    ofImage bgImage;
+    ofImage logo;
 
     
     ofVideoPlayer video;
@@ -68,6 +68,7 @@ public:
     
     bool videoStarted;
     bool isProjectorOn;
+    bool displayLogo;
     
     ofImage* prevImage;
     ofImage* currentImage;
