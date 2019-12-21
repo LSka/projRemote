@@ -69,6 +69,7 @@ void ofApp::setup(){
     //compute global video duration
     globalDuration = 0;
     oldElapsed = 0;
+    globalElapsed = 0;
     for (unsigned int v = 0; v < videoDir.size(); v++){
         string vP = ofToDataPath(videoDir.getPath(v),true);
         ofVideoPlayer vid;
@@ -76,6 +77,10 @@ void ofApp::setup(){
         float d = vid.getDuration();
         globalDuration += d;
     }
+    
+    elapsedTime = timeFormat(globalElapsed);
+    remainingTime = timeFormat(globalDuration);
+    
     position = 0;
     playlistPosition = 0;
     
@@ -180,11 +185,17 @@ void ofApp::update(){
         //if there are none, go to black and restart the carousel
             else{
                 videoStarted = false;
+                
+                //show the logo
                 displayLogo = true;
+                
+                //reset the counters
                 imagesPosition = 0;
                 position = 0;
                 playlistPosition = 0;
                 logoTime = 0;
+                oldElapsed = 0;
+                globalElapsed = 0;
             }
 
 
@@ -192,7 +203,7 @@ void ofApp::update(){
     }
     else{
         if (displayLogo){
-            if (logoTime <= 1800){
+            if (logoTime <= 1800){ //display the logo for 30 seconds, then restart the carousel
                 currentImage = &logo;
                 logoTime++;
             }
@@ -203,11 +214,14 @@ void ofApp::update(){
             }
 
         }
+        
+        //draw the fbo
         imagesFbo.begin();
         currentImage->draw(0,0,imagesFbo.getWidth(),imagesFbo.getHeight());
         imagesFbo.end();
     }
 
+    //advance the carousel
     if (carouselTicker.tick()){
         imagesPosition++;
         if (imagesPosition >= images.size()){
