@@ -184,6 +184,7 @@ void ofApp::update(){
                 imagesPosition = 0;
                 position = 0;
                 playlistPosition = 0;
+                logoTime = 0;
             }
 
 
@@ -191,7 +192,16 @@ void ofApp::update(){
     }
     else{
         if (displayLogo){
-            currentImage = &logo;
+            if (logoTime <= 1800){
+                currentImage = &logo;
+                logoTime++;
+            }
+            else {
+                displayLogo = false;
+                imagesPosition = 0;
+                currentImage = &images.at(imagesPosition);
+            }
+
         }
         imagesFbo.begin();
         currentImage->draw(0,0,imagesFbo.getWidth(),imagesFbo.getHeight());

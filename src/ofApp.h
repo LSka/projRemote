@@ -54,6 +54,7 @@ public:
     unsigned int xFadeTime;
     unsigned int imageTime;
     unsigned int fadeInTime;
+    unsigned int logoTime;
     
     ofTrueTypeFont  verdana;
     ofTrueTypeFont  verdanaSmall;
