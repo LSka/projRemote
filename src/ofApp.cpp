@@ -393,6 +393,13 @@ void ofApp::keyPressed(int key){
 	bellState = 0;
 	playhead = 0;
 	break;
+            
+        case 'r':
+            system("sudo reboot");
+        break;
+            
+            
+            
 
     }
     
