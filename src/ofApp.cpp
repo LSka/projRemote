@@ -328,6 +328,14 @@ void ofApp::keyPressed(int key){
             video.stop();
             videoStarted = false;
             fadeFrames = 0;
+            //reset the counters
+            imagesPosition = 0;
+            position = 0;
+            playlistPosition = 0;
+            logoTime = 0;
+            oldElapsed = 0;
+            globalElapsed = 0;
+
     break;
         case 'w':
             projector.On();
