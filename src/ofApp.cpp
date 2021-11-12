@@ -182,7 +182,19 @@ void ofApp::update(){
                 video.setLoopState(OF_LOOP_NONE);
                 video.play();
             }
-        //if there are none, go to black and restart the carousel
+	//LOOP
+            else if(settings.getValue("LOOP:VALUE",0) == 1){
+		//reset the counters
+                imagesPosition = 0;
+                position = 0;
+                playlistPosition = 0;
+                logoTime = 0;
+                oldElapsed = 0;
+                globalElapsed = 0;
+            }
+
+
+        //if videos are finished and the loop is deactivated, go to black and restart the carousel
             else{
                 videoStarted = false;
                 
