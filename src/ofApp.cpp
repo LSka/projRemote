@@ -131,7 +131,8 @@ void ofApp::setupProjector(){
 void ofApp::update(){
 
     mainFade.update();
-    float v = videoVolumeTimer.getValue();
+    videoVolumeTimer.update();
+    float v = float(videoVolumeTimer.getValue()) * 0.01;
     video.setVolume(v);
     
     //update the sound system
@@ -140,10 +141,6 @@ void ofApp::update(){
         if(sound.getPosition() >= 0.99f){
             sound.stop();
             sound.unload();
-            videoVolumeTimer.setDuration(120);
-            videoVolumeTimer.setBeginning(0.1f);
-            videoVolumeTimer.setTarget(1);
-            videoVolumeTimer.start();
             playhead++;
             if (playhead >= soundsDir.size()){
                 playhead = 0;
@@ -201,9 +198,9 @@ void ofApp::update(){
                 videoStarted = false;
                 
                 //Fade Video Volume to zero
-                videoVolumeTimer.setDuration(30);
-                videoVolumeTimer.setBeginning(1.f);
-                videoVolumeTimer.setTarget(0.f);
+                videoVolumeTimer.setDuration(1);
+                videoVolumeTimer.setBeginning(videoVolumeTimer.getValue());
+                videoVolumeTimer.setTarget(0);
                 videoVolumeTimer.start();
                 
                 //show the logo
@@ -368,11 +365,10 @@ void ofApp::keyPressed(int key){
             if (bellState == 0){
 
                 videoVolumeTimer.setDuration(1);
-                videoVolumeTimer.setBeginning(1);
-                videoVolumeTimer.setTarget(0.1f);
+                videoVolumeTimer.setBeginning(videoVolumeTimer.getValue());
+                videoVolumeTimer.setTarget(0);
                 videoVolumeTimer.start();
                 sound.load(soundsDir.getPath(playhead));
-                video.setVolume(0);
                 system("amixer sset Master 0%,100%");
                 sound.play();
                 bellState = 1;
@@ -381,14 +377,13 @@ void ofApp::keyPressed(int key){
                 if (bellState == 1){
                     sound.setPaused(true);
                     bellState = 2;
-                    videoVolumeTimer.setDuration(120);
-                    videoVolumeTimer.setBeginning(0.1f);
-                    videoVolumeTimer.setTarget(1);
-                    videoVolumeTimer.start();
                 }
                 else if (bellState == 2){
-                    video.setVolume(0);
-		system("amixer sset Master 0%,100%");
+                    videoVolumeTimer.setDuration(1);
+                    videoVolumeTimer.setBeginning(videoVolumeTimer.getValue());
+                    videoVolumeTimer.setTarget(0);
+                    videoVolumeTimer.start();
+                    system("amixer sset Master 0%,100%");
                     sound.setPaused(false);
                     bellState = 1;
                 }
@@ -400,6 +395,7 @@ void ofApp::keyPressed(int key){
             playhead--;
             playhead = ofClamp(playhead, 0, soundsDir.size()-1);
             bellState = 0;
+            
 
             break;
         case 'c':
@@ -419,6 +415,10 @@ void ofApp::keyPressed(int key){
 	sound.stop();
 	bellState = 0;
 	playhead = 0;
+            videoVolumeTimer.setDuration(30);
+            videoVolumeTimer.setBeginning(0);
+            videoVolumeTimer.setTarget(100);
+            videoVolumeTimer.start();
 	break;
             
         case 'r':
@@ -447,8 +447,8 @@ void ofApp::playVideo(){
         video.setLoopState(OF_LOOP_NONE);
         
         videoVolumeTimer.setDuration(30);
-        videoVolumeTimer.setBeginning(0.1f);
-        videoVolumeTimer.setTarget(1);
+        videoVolumeTimer.setBeginning(0);
+        videoVolumeTimer.setTarget(100);
         videoVolumeTimer.start();
         
         system("amixer sset Master 100%,0%");
@@ -458,8 +458,8 @@ void ofApp::playVideo(){
     else if(!video.isPaused()){
         
         videoVolumeTimer.setDuration(30);
-        videoVolumeTimer.setBeginning(0.1f);
-        videoVolumeTimer.setTarget(1);
+        videoVolumeTimer.setBeginning(0);
+        videoVolumeTimer.setTarget(100);
         videoVolumeTimer.start();
 
         video.setPaused(true);
@@ -467,8 +467,8 @@ void ofApp::playVideo(){
     else if(video.isPaused()){
         
         videoVolumeTimer.setDuration(30);
-        videoVolumeTimer.setBeginning(0.1f);
-        videoVolumeTimer.setTarget(1);
+        videoVolumeTimer.setBeginning(0);
+        videoVolumeTimer.setTarget(100);
         videoVolumeTimer.start();
         
         system("amixer sset Master 100%,0%");
