@@ -131,6 +131,8 @@ void ofApp::setupProjector(){
 void ofApp::update(){
 
     mainFade.update();
+    float v = videoVolumeTimer.getValue();
+    video.setVolume(v);
     
     //update the sound system
     ofSoundUpdate();
@@ -197,6 +199,12 @@ void ofApp::update(){
         //if videos are finished and the loop is deactivated, go to black and restart the carousel
             else{
                 videoStarted = false;
+                
+                //Fade Video Volume to zero
+                videoVolumeTimer.setDuration(30);
+                videoVolumeTimer.setBeginning(1.f);
+                videoVolumeTimer.setTarget(0.f);
+                videoVolumeTimer.start();
                 
                 //show the logo
                 displayLogo = true;
@@ -323,6 +331,7 @@ void ofApp::draw(){
 
 }
 
+//DRAW ON THE PROJECTOR WINDOW
 void ofApp::drawProjector(ofEventArgs & args){
     ofSetColor(255,255,255,255);
     videoTexture.draw(0,0,projectorWindowWidth,projectorWindowHeight);
@@ -358,11 +367,12 @@ void ofApp::keyPressed(int key){
         case 'z':
             if (bellState == 0){
 
-                videoVolumeTimer.setDuration(60);
+                videoVolumeTimer.setDuration(1);
                 videoVolumeTimer.setBeginning(1);
                 videoVolumeTimer.setTarget(0.1f);
                 videoVolumeTimer.start();
                 sound.load(soundsDir.getPath(playhead));
+                video.setVolume(0);
                 system("amixer sset Master 0%,100%");
                 sound.play();
                 bellState = 1;
@@ -371,8 +381,13 @@ void ofApp::keyPressed(int key){
                 if (bellState == 1){
                     sound.setPaused(true);
                     bellState = 2;
+                    videoVolumeTimer.setDuration(120);
+                    videoVolumeTimer.setBeginning(0.1f);
+                    videoVolumeTimer.setTarget(1);
+                    videoVolumeTimer.start();
                 }
                 else if (bellState == 2){
+                    video.setVolume(0);
 		system("amixer sset Master 0%,100%");
                     sound.setPaused(false);
                     bellState = 1;
@@ -430,15 +445,33 @@ void ofApp::playVideo(){
         string vP = ofToDataPath(videoDir.getPath(playlistPosition),true);//NOTE: only the first video in the folder gets loaded
         video.load(vP);
         video.setLoopState(OF_LOOP_NONE);
+        
+        videoVolumeTimer.setDuration(30);
+        videoVolumeTimer.setBeginning(0.1f);
+        videoVolumeTimer.setTarget(1);
+        videoVolumeTimer.start();
+        
         system("amixer sset Master 100%,0%");
-	video.play();
+        video.play();
         videoStarted = true;
     }
     else if(!video.isPaused()){
+        
+        videoVolumeTimer.setDuration(30);
+        videoVolumeTimer.setBeginning(0.1f);
+        videoVolumeTimer.setTarget(1);
+        videoVolumeTimer.start();
+
         video.setPaused(true);
     }
     else if(video.isPaused()){
-	system("amixer sset Master 100%,0%");
+        
+        videoVolumeTimer.setDuration(30);
+        videoVolumeTimer.setBeginning(0.1f);
+        videoVolumeTimer.setTarget(1);
+        videoVolumeTimer.start();
+        
+        system("amixer sset Master 100%,0%");
         video.setPaused(false);
     }
 }
