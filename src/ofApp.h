@@ -87,7 +87,6 @@ public:
 
     FadeTimer mainFade;
     FadeTimer xFadeTimer;
-    FadeTimer videoVolumeTimer;
     Ticker carouselTicker;
     
 };
