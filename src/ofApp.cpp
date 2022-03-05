@@ -151,11 +151,24 @@ void ofApp::update(){
             sound.stop();
             sound.unload();
             playhead++;
+            if (autoplay){
+                if (playhead >= soundsDir.size()){
+                    playhead = 0;
+                    bellState = 0;
+                }
+                else if (playhead < soundsDir.size()){
+                    sound.load(soundsDir.getPath(playhead));
+                    system("amixer sset Master 0%,100%");
+                    sound.play();
+                }
+            }
+            else{
             bellState = 0;
             }
                 if (playhead >= soundsDir.size()){
                     playhead = 0;
                 }
+        }
         }
     
     
