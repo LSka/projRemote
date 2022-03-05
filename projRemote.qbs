@@ -12,13 +12,20 @@ Project{
         name: { return FileInfo.baseName(sourceDirectory) }
 
         files: [
-            "src/fadetimer.cpp",
-            "src/fadetimer.h",
-            "src/ticker.cpp",
-            "src/ticker.h",
+            'src/fadetimer.cpp',
+            'src/fadetimer.h',
             'src/main.cpp',
             'src/ofApp.cpp',
             'src/ofApp.h',
+            'src/ticker.cpp',
+            'src/ticker.h',
+        ]
+
+        of.addons: [
+            'ofxXmlSettings',
+            'ofxNetwork',
+            'ofxPoco',
+            'ofxPJControl',
         ]
 
         // This project is using addons.make to include the addons

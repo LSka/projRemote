@@ -80,6 +80,7 @@ public:
     ofDirectory soundsDir;
     unsigned int playhead;
     int bellState;
+    bool autoplay;
 
     ofDirectory videoDir;
     unsigned int playlistPosition;

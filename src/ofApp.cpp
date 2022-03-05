@@ -57,6 +57,15 @@ void ofApp::setup(){
     soundsDir.sort();
     playhead = 0;
     bellState = 0;
+
+    //set autoplay status
+    int ap = settings.getValue("SOUNDS:AUTOPLAY",0);
+    if (ap != 0){
+        autoplay = true;
+    }
+    else {
+        autoplay = false;
+    }
     
 
     //load the video files
@@ -138,21 +147,16 @@ void ofApp::update(){
     //update the sound system
     ofSoundUpdate();
     if (bellState == 1){
-        if(sound.getPosition() >= 0.99f){
+        if(sound.getPosition() >= 0.9f){
             sound.stop();
             sound.unload();
             playhead++;
-            if (playhead >= soundsDir.size()){
-                playhead = 0;
-                bellState = 0;
+            bellState = 0;
             }
-            else if (playhead < soundsDir.size()){
-                sound.load(soundsDir.getPath(playhead));
-                system("amixer sset Master 0%,100%");
-                sound.play();
-            }
+                if (playhead >= soundsDir.size()){
+                    playhead = 0;
+                }
         }
-    }
     
     
     if (video.isLoaded() && videoStarted){
