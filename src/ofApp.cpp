@@ -140,14 +140,11 @@ void ofApp::setupProjector(){
 void ofApp::update(){
 
     mainFade.update();
-    videoVolumeTimer.update();
-    float v = float(videoVolumeTimer.getValue()) * 0.01;
-    video.setVolume(v);
     
     //update the sound system
     ofSoundUpdate();
     if (bellState == 1){
-        if(sound.getPosition() >= 0.9f){
+        if(!sound.isPlaying()){
             sound.stop();
             sound.unload();
             playhead++;
@@ -165,10 +162,11 @@ void ofApp::update(){
             else{
             bellState = 0;
             }
-                if (playhead >= soundsDir.size()){
+
+            if (playhead >= soundsDir.size()){
                     playhead = 0;
                 }
-        }
+            }
         }
     
     
