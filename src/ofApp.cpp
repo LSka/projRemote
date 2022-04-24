@@ -2,7 +2,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    system("amixer sset Master 100%,100%");
+//    system("amixer sset Master 100%,100%");
     
     //initialise window dimensions variables
     mainWindowWidth = ofGetWidth();
@@ -152,17 +152,17 @@ void ofApp::update(){
                 if (playhead >= soundsDir.size()){
                     playhead = 0;
                     bellState = 0;
-                    system("amixer sset Master 100%,0%");
+//                    system("amixer sset Master 100%,0%");
                 }
                 else if (playhead < soundsDir.size()){
                     sound.load(soundsDir.getPath(playhead));
-                    system("amixer sset Master 0%,100%");
+//                    system("amixer sset Master 0%,100%");
                     sound.play();
                 }
             }
             else{
             bellState = 0;
-            system("amixer sset Master 100%,0%");
+//            system("amixer sset Master 100%,0%");
             }
 
             if (playhead >= soundsDir.size()){
@@ -355,7 +355,7 @@ void ofApp::drawProjector(ofEventArgs & args){
 void ofApp::keyPressed(int key){
     switch(key){
         case ' ':
-            system("amixer sset Master 100%,0%");
+//            system("amixer sset Master 100%,0%");
             playVideo();
             displayLogo = false;
     break;
@@ -383,18 +383,18 @@ void ofApp::keyPressed(int key){
                 sound.load(soundsDir.getPath(playhead));
                 sound.play();
                 bellState = 1;
-                system("amixer sset Master 0%,100%");
+//                system("amixer sset Master 0%,100%");
             }
             else {
                 if (bellState == 1){
                     sound.setPaused(true);
                     bellState = 2;
-                    system("amixer sset Master 100%,0%");
+//                    system("amixer sset Master 100%,0%");
                 }
                 else if (bellState == 2){
                     sound.setPaused(false);
                     bellState = 1;
-                    system("amixer sset Master 0%,100%");
+ //                   system("amixer sset Master 0%,100%");
                 }
             }
             break;
@@ -450,7 +450,7 @@ void ofApp::playVideo(){
         string vP = ofToDataPath(videoDir.getPath(playlistPosition),true);//NOTE: only the first video in the folder gets loaded
         video.load(vP);
         video.setLoopState(OF_LOOP_NONE);
-        system("amixer sset Master 100%,0%");
+ //       system("amixer sset Master 100%,0%");
         video.play();
         videoStarted = true;
     }
@@ -458,7 +458,7 @@ void ofApp::playVideo(){
         video.setPaused(true);
     }
     else if(video.isPaused()){
-        system("amixer sset Master 100%,0%");
+//        system("amixer sset Master 100%,0%");
         video.setPaused(false);
     }
 }
