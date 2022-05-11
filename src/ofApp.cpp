@@ -205,15 +205,20 @@ void ofApp::update(){
                 video.play();
             }
 	//LOOP
-            else if(settings.getValue("LOOP:VALUE",0) == 1){
-		//reset the counters
-                imagesPosition = 0;
-                position = 0;
-                playlistPosition = 0;
-                logoTime = 0;
-                oldElapsed = 0;
-                globalElapsed = 0;
-            }
+                if(settings.getValue("LOOP:VALUE",0) == 1){
+            //reset the counters
+                    imagesPosition = 0;
+                    position = 0;
+                    playlistPosition = 0;
+                    logoTime = 0;
+                    oldElapsed = 0;
+                    globalElapsed = 0;
+                    string vP = ofToDataPath(videoDir.getPath(playlistPosition),true);
+                    video.load(vP);
+                    video.setLoopState(OF_LOOP_NONE);
+                    video.play();
+
+                }
 
 
         //if videos are finished and the loop is deactivated, go to black and restart the carousel
