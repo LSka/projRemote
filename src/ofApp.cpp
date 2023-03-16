@@ -75,6 +75,7 @@ void ofApp::setup(){
     videoDir.allowExt("mp4");
     videoDir.listDir();
     videoDir.sort();
+    ofLog()<< videoDir.size() <<endl ;
 
     //compute global video duration
     globalDuration = 0;
@@ -198,15 +199,17 @@ void ofApp::update(){
             //load and play next video
             oldElapsed = globalElapsed;
             playlistPosition++;
+		ofLog()<< playlistPosition <<endl;
             if (playlistPosition < videoDir.size()){
                 string vP = ofToDataPath(videoDir.getPath(playlistPosition),true);
                 video.load(vP);
                 video.setLoopState(OF_LOOP_NONE);
                 video.play();
-            }
-	//LOOP
+                ofLog()<< "playing video number " << playlistPosition <<endl;
+                
+                //LOOP
                 if(settings.getValue("LOOP:VALUE",0) == 1){
-            //reset the counters
+                    //reset the counters
                     imagesPosition = 0;
                     position = 0;
                     playlistPosition = 0;
@@ -217,12 +220,14 @@ void ofApp::update(){
                     video.load(vP);
                     video.setLoopState(OF_LOOP_NONE);
                     video.play();
-
+                    
                 }
+            }
 
 
         //if videos are finished and the loop is deactivated, go to black and restart the carousel
             else{
+		ofLog()<< "no more videos. Stopping" <<endl;
                 videoStarted = false;
                 
                 //show the logo
@@ -457,6 +462,7 @@ void ofApp::playVideo(){
         video.setLoopState(OF_LOOP_NONE);
  //       system("amixer sset Master 100%,0%");
         video.play();
+		ofLog()<< "first video started" <<endl;
         videoStarted = true;
     }
     else if(!video.isPaused()){
