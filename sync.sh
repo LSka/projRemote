@@ -1,5 +1,10 @@
 #!/bin/bash
 
+#define the source and destination directories
+REMOTEDIR=/media/remotedir
+LOCALDIR=/home/user/localdir
+
+
 #send all output to syslog
  exec 1> >(exec logger -s -t $(basename $0)) 2>&1
 
@@ -9,7 +14,7 @@ MOUNTED=`mount -t cifs | wc -c`
 if [ $MOUNTED -gt 0 ]
 then
 	echo "remote share mounted. Syncing..."
-	rsync -av --delete /media/sambatest /home/luca/
+	rsync -av --delete $REMOTEDIR $LOCALDIR
 	STATUS=$?
 	if [ $STATUS -eq 0 ]
 	then
