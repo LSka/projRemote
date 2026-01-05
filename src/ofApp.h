@@ -30,7 +30,10 @@ public:
     
     ofVideoPlayer video;
     ofTexture videoTexture;
-    
+	ofImage* prevImage;
+	ofImage* currentImage;
+	ofFbo imagesFbo;
+
     ofxXmlSettings settings;
     
     
@@ -49,13 +52,15 @@ public:
     float topMargin;
     float bottomMargin;
     
-    unsigned int fadeFrames;
     unsigned int mainAlpha;
-    unsigned int xFadeTime;
     unsigned int imageTime;
     unsigned int fadeInTime;
     unsigned int logoTime;
-    
+	unsigned int imagesPosition;
+	unsigned int playhead;
+	unsigned int playlistPosition;
+	int bellState;
+
     ofTrueTypeFont  verdana;
     ofTrueTypeFont  verdanaSmall;
     string elapsedTime;
@@ -63,30 +68,19 @@ public:
     
     ofParameterGroup parameters;
 
-        
     ofxPJControl projector;
-    
-    
+
     bool videoStarted;
     bool isProjectorOn;
     bool displayLogo;
-    
-    ofImage* prevImage;
-    ofImage* currentImage;
-    ofFbo imagesFbo;
-    unsigned int imagesPosition;
-    
+	bool autoPlay;
+	bool autoProgress;
+
     ofSoundPlayer sound;
     ofDirectory soundsDir;
-    unsigned int playhead;
-    int bellState;
-    bool autoplay;
-
     ofDirectory videoDir;
-    unsigned int playlistPosition;
 
     FadeTimer mainFade;
-    FadeTimer xFadeTimer;
     Ticker carouselTicker;
     
 };

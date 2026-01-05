@@ -2,20 +2,30 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-//    system("amixer sset Master 100%,100%");
-    
+
     //initialise window dimensions variables
     mainWindowWidth = ofGetWidth();
     mainWindowHeight = ofGetHeight();
-    
     leftMargin = mainWindowWidth * 0.1f;
     topMargin = mainWindowHeight * 0.1f;
-    
+
+	ofSetFullscreen(true);
+
+	//Allocate the video texture
+	videoTexture.allocate(1920,1080,GL_RGBA);
+
+	//Allocate the Fbo where the images will be mixed
+	imagesFbo.allocate(1920, 1080,GL_RGBA);
+	imagesFbo.begin();
+	ofClear(255,255,255,255);
+	imagesFbo.end();
+
     ofBackground(0);
-    
+
+	//load the settings file
+
     ofLog() << "loading settings.xml" <<endl;
-    //we load our settings file
-    if( settings.loadFile("settings.xml") ){
+    if( settings.load("settings.xml") ){
         ofLog() << "settings.xml loaded!" << endl;
     }
     else{
@@ -59,23 +69,32 @@ void ofApp::setup(){
     playhead = 0;
     bellState = 0;
 
-    //set autoplay status
+	//when audio file ends, automatically progress to the next one
+
+	int apr = settings.getValue("SOUNDS:AUTOPROGRESS", 0);
+	if (apr != 0){
+		autoProgress = true;
+	}
+	else {
+		autoProgress = false;
+	}
+
+    //set autoplay status for the audio files
     int ap = settings.getValue("SOUNDS:AUTOPLAY",0);
     if (ap != 0){
-        autoplay = true;
+        autoPlay = true;
     }
     else {
-        autoplay = false;
+        autoPlay = false;
     }
     
-
     //load the video files
     string videoPath = settings.getValue("VIDEOS:PATH","video");
     videoDir.open(videoPath);
     videoDir.allowExt("mp4");
     videoDir.listDir();
     videoDir.sort();
-    ofLog()<< videoDir.size() <<endl ;
+    ofLog()<< "loaded " + ofToString(videoDir.size()) + " videos" <<endl ;
 
     //compute global video duration
     globalDuration = 0;
@@ -94,38 +113,25 @@ void ofApp::setup(){
     
     position = 0;
     playlistPosition = 0;
-    
-    videoTexture.allocate(1920,1080,GL_RGBA);
-    fadeFrames = 0;
-    
-    //Allocate the Fbo where the images will be mixed
-    imagesFbo.allocate(1920, 1080,GL_RGBA);
-    imagesFbo.begin();
-    ofClear(255,255,255,255);
-    imagesFbo.end();
-    
-    videoStarted = false;
-    
 
-    ofSetFullscreen(true);
+    videoStarted = false;
+
     
     //Setup the GUI elements and the OSD
     verdana.load("verdana.ttf", 30, true, true);
     verdanaSmall.load("verdana.ttf", 12, true, true);
     
     imageTime = settings.getValue("IMAGES:CHANGETIME",60);
-    xFadeTime = settings.getValue("IMAGES:XFADETIME",240);
     fadeInTime = settings.getValue("FADEINTIME",120);
     
     //set the global opacity to 255
-
     mainFade.setDuration(fadeInTime);
     mainFade.setBeginning(0);
     mainFade.setTarget(255);
     mainFade.start();
 
-    
-    carouselTicker.setInterval(imageTime);
+	//set the image carousel speed
+	carouselTicker.setInterval(imageTime);
 
 }
 
@@ -149,21 +155,18 @@ void ofApp::update(){
             sound.stop();
             sound.unload();
             playhead++;
-            if (autoplay){
+            if (autoPlay){
                 if (playhead >= soundsDir.size()){
                     playhead = 0;
                     bellState = 0;
-//                    system("amixer sset Master 100%,0%");
                 }
                 else if (playhead < soundsDir.size()){
                     sound.load(soundsDir.getPath(playhead));
-//                    system("amixer sset Master 0%,100%");
                     sound.play();
                 }
             }
             else{
             bellState = 0;
-//            system("amixer sset Master 100%,0%");
             }
 
             if (playhead >= soundsDir.size()){
@@ -199,16 +202,16 @@ void ofApp::update(){
             //load and play next video
             oldElapsed = globalElapsed;
             playlistPosition++;
-		ofLog()<< playlistPosition <<endl;
+		ofLog()<< "Moving playlist cursor to position: " << playlistPosition <<endl;
             if (playlistPosition < videoDir.size()){
                 string vP = ofToDataPath(videoDir.getPath(playlistPosition),true);
                 video.load(vP);
                 video.setLoopState(OF_LOOP_NONE);
                 video.play();
-                ofLog()<< "playing video number " << playlistPosition <<endl;
-                
+                ofLog()<< "playing video number: " << playlistPosition <<endl;
+
                 //LOOP
-                if(settings.getValue("LOOP:VALUE",0) == 1){
+                if(settings.getValue("VIDEOS:LOOP",0) == 1){
                     //reset the counters
                     imagesPosition = 0;
                     position = 0;
@@ -290,7 +293,7 @@ void ofApp::draw(){
     }
     
 
-    ofSetColor(255,255,255,255); //this is to fade the master texture
+    ofSetColor(255,255,255,255); //this is to fade the main texture
     videoTexture.draw(0,0,mainWindowWidth,mainWindowHeight);
     
     //Draw the GUI and the OSD
@@ -365,14 +368,12 @@ void ofApp::drawProjector(ofEventArgs & args){
 void ofApp::keyPressed(int key){
     switch(key){
         case ' ':
-//            system("amixer sset Master 100%,0%");
             playVideo();
             displayLogo = false;
     break;
         case 's':
             video.stop();
             videoStarted = false;
-            fadeFrames = 0;
             //reset the counters
             imagesPosition = 0;
             position = 0;
@@ -393,18 +394,15 @@ void ofApp::keyPressed(int key){
                 sound.load(soundsDir.getPath(playhead));
                 sound.play();
                 bellState = 1;
-//                system("amixer sset Master 0%,100%");
             }
             else {
                 if (bellState == 1){
                     sound.setPaused(true);
                     bellState = 2;
-//                    system("amixer sset Master 100%,0%");
                 }
                 else if (bellState == 2){
                     sound.setPaused(false);
                     bellState = 1;
- //                   system("amixer sset Master 0%,100%");
                 }
             }
             break;
@@ -436,9 +434,9 @@ void ofApp::keyPressed(int key){
 	playhead = 0;
 	break;
             
-        case 'r':
-            system("sudo reboot");
-        break;
+	case 'r':
+		system("sudo reboot");
+	break;
             
             
             
@@ -454,22 +452,24 @@ void ofApp::keyPressed(int key){
 
 void ofApp::playVideo(){
     displayLogo = false;
+	//If the videos are not playing, load and start the first video,
+	//if videos are playing, toggle pause state
     if (!videoStarted){
         //load the video
         playlistPosition = 0;
         string vP = ofToDataPath(videoDir.getPath(playlistPosition),true);//NOTE: only the first video in the folder gets loaded
         video.load(vP);
         video.setLoopState(OF_LOOP_NONE);
- //       system("amixer sset Master 100%,0%");
         video.play();
 		ofLog()<< "first video started" <<endl;
         videoStarted = true;
     }
     else if(!video.isPaused()){
+		ofLog()<< "video paused" <<endl;
         video.setPaused(true);
     }
     else if(video.isPaused()){
-//        system("amixer sset Master 100%,0%");
+		ofLog()<< "playing resumed" <<endl;
         video.setPaused(false);
     }
 }

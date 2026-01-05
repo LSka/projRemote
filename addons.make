@@ -1,4 +1,3 @@
-ofxXmlSettings
 ofxNetwork
-ofxPoco
 ofxPJControl
+ofxXmlSettings
