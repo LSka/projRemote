@@ -37,6 +37,6 @@ obj
 openFrameworks-Info.plist
 *.qbs*
 Project.xcconfig*
-*.xcodeproj
+*.xcodeproj/*
 .DS_Store
 
