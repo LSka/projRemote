@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxXmlSettings.h"
 #include "ofxPJControl.h"
+#include "ofxOsc.h"
 #include "fadetimer.h"
 #include "ticker.h"
 
@@ -19,8 +20,13 @@ public:
     void playButtonPressed();
     void stopButtonPressed();
     void playVideo();
+	void playBell(unsigned int b);
+	void bellStop();
+	void oscUpdate();
     string timeFormat(float time);
-    
+	string bellFileName;
+	string now;
+
     
     
     ofPath soundsPath;
@@ -35,7 +41,9 @@ public:
 	ofFbo imagesFbo;
 
     ofxXmlSettings settings;
-    
+
+	ofxOscReceiver oscReceiver;
+
     
     float mainWindowWidth;
     float mainWindowHeight;
@@ -59,6 +67,7 @@ public:
 	unsigned int imagesPosition;
 	unsigned int playhead;
 	unsigned int playlistPosition;
+	unsigned int oscPort;
 	int bellState;
 
     ofTrueTypeFont  verdana;

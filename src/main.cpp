@@ -6,21 +6,24 @@
 int main( ){
     
     //Create two windows with shared render context and put them in their respective monitor
-    ofGLFWWindowSettings settings;
-    settings.title = "Control Window";
-    settings.monitor = 0;
- 
-   settings.windowMode = OF_GAME_MODE;
-    settings.decorated = false;
-    shared_ptr<ofAppBaseWindow> mainWindow = ofCreateWindow(settings);
+    ofGLFWWindowSettings ctlWinSettings;
+	ctlWinSettings.title = "Control Window";
+	ctlWinSettings.monitor = 0;
+
+    ctlWinSettings.windowMode = OF_WINDOW;
+	ctlWinSettings.decorated = false;
+	ctlWinSettings.setSize(640,400);
+    shared_ptr<ofAppBaseWindow> mainWindow = ofCreateWindow(ctlWinSettings);
     mainWindow->setWindowPosition(0, 0);
    // mainWindow->setFullscreen(true);
-    
-    settings.title = "Projection Window";
-    settings.shareContextWith = mainWindow;
-    settings.monitor = 1;
-   // settings.setSize(1280, 720);
-    shared_ptr<ofAppBaseWindow> projectorWindow = ofCreateWindow(settings);
+
+	ofGLFWWindowSettings projWinSettings;
+	projWinSettings.title = "Projection Window";
+	projWinSettings.shareContextWith = mainWindow;
+	projWinSettings.decorated = false;
+	projWinSettings.monitor = 1;
+	projWinSettings.setSize(640, 360);
+    shared_ptr<ofAppBaseWindow> projectorWindow = ofCreateWindow(projWinSettings);
     projectorWindow->setVerticalSync(true);
    // projectorWindow->setWindowPosition(1281,0);
    // projectorWindow->setFullscreen(true);
