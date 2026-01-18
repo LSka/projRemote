@@ -35,8 +35,13 @@ obj
 *.app
 
 openFrameworks-Info.plist
-*.qbs*
+*.qbs
 Project.xcconfig*
-*.xcodeproj/*
+*.xcodeproj
 .DS_Store
+
+## User settings
+xcuserdata/
+
+
 
