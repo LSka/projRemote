@@ -33,3 +33,10 @@ obj
 *.exe
 *.out
 *.app
+
+openFrameworks-Info.plist
+*.qbs*
+Project.xcconfig*
+*.xcodeproj
+.DS_Store
+
