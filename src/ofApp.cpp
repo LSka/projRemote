@@ -192,7 +192,7 @@ void ofApp::update(){
 			}
 
 			//LOOP
-			else if(settings.getValue("VIDEOS:LOOP",0) == 1){
+			else if(videoLoop){
 				//reset the counters
 				imagesPosition = 0;
 				position = 0;
@@ -356,6 +356,9 @@ void ofApp::keyPressed(int key){
         case 's':
 			stopVideo();
 			break;
+		case 'l':
+			videoLoop = !videoLoop;
+			break;
 		case 'd':
 			bellStop();
 			break;
@@ -490,7 +493,9 @@ void ofApp::oscUpdate(){
 		oscReceiver.getNextMessage(m);
 
 		if(m.getAddress() == "/bell/play"){
-			playBell(m.getArgAsInt(0));
+			if (m.getNumArgs() > 0){
+				playBell(m.getArgAsInt(0));
+			}
 		}
 		else if(m.getAddress() == "/bell/stop"){
 			bellStop();
@@ -500,6 +505,18 @@ void ofApp::oscUpdate(){
 		}
 		else if(m.getAddress() == "/video/stop"){
 			stopVideo();
+		}
+		else if(m.getAddress() == "/video/loop"){
+			if (m.getNumArgs() > 0){
+				if(m.getArgAsInt(0) == 1){
+					videoLoop = true;
+					ofLog()<<"Video Looping on"<<endl;
+				}
+				else {
+					videoLoop = false;
+					ofLog()<<"Video Looping off"<<endl;
+				}
+			}
 		}
 
 		else{

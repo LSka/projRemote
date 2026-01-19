@@ -83,8 +83,7 @@ public:
     bool videoStarted;
     bool isProjectorOn;
     bool displayLogo;
-	bool autoPlay;
-	bool autoProgress;
+	bool videoLoop;
 
     ofSoundPlayer sound;
     ofDirectory soundsDir;
