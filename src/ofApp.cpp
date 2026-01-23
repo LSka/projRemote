@@ -70,6 +70,10 @@ void ofApp::setup(){
 		ofLog()<<"loaded "<<soundsDir.size()<<" audio files."<<endl;
 		bellState = 0;
 		bellFileName = "";
+
+		for (unsigned int i = 0; i < soundsDir.size(); i++){
+			soundFileNamesList += "\n"+ofFilePath::getBaseName(soundsDir.getPath(i));
+		}
 	}
 	else {
 		ofLogError()<<"audio directory empty or not a directory"<<endl;
@@ -112,9 +116,11 @@ void ofApp::setup(){
 
     
     //Setup the GUI elements and the OSD
-    verdana.load("verdana.ttf", 30, true, true);
-    verdanaSmall.load("verdana.ttf", 12, true, true);
-    
+    textFontLarge.load("verdana.ttf", 30, true, true);
+	textFontMedium.load("verdana.ttf", 26, true, true);
+    textFontSmall.load("verdana.ttf", 12, true, true);
+	textFontMedium.setLineHeight(52);
+
     imageTime = settings.getValue("IMAGES:CHANGETIME",600);
     fadeInTime = settings.getValue("FADEINTIME",120);
     
@@ -182,7 +188,6 @@ void ofApp::update(){
 			//load and play next video
 			oldElapsed = globalElapsed;
 			playlistPosition++;
-			//ofLog()<< "Moving playlist cursor to position: " << playlistPosition <<endl;
 			if (playlistPosition < videoDir.size()){
 				string vP = ofToDataPath(videoDir.getPath(playlistPosition),true);
 				video.load(vP);
@@ -287,28 +292,30 @@ void ofApp::draw(){
 	//draw clock
 	ofSetColor(255,255,255,255);
     now = ofToString(ofGetHours(),0,2,'0')+":"+ofToString(ofGetMinutes(),0,2,'0')+":"+ofToString(ofGetSeconds(),0,2,'0');
-    verdana.drawString(now, mainWindowWidth * 0.8f, topMargin);
+    textFontLarge.drawString(now, mainWindowWidth * 0.8f, topMargin);
 
 	//draw fps meter
     ofSetColor(255,255,255,200);
-    verdanaSmall.drawString("FPS: "+ofToString(ofGetFrameRate(),0),mainWindowWidth * 0.8f,mainWindowHeight * 0.15f);
-    verdana.drawString(elapsedTime,mainWindowWidth * 0.1f,mainWindowHeight * 0.79f);
-    verdana.drawString("-"+remainingTime,mainWindowWidth * 0.71f,mainWindowHeight * 0.79f);
-    
-    string bellIsPlaying;
-    switch (bellState){
-        case 0:
-            bellIsPlaying = "Stop";
-            break;
-        case 1:
-            bellIsPlaying = "Play";
-            break;
-        case 2:
-            bellIsPlaying = "Pausa";
-            break;
-    }
-    verdana.drawString(bellFileName+" - "+bellIsPlaying,mainWindowWidth*0.1f,mainWindowHeight * 0.69f);
+    textFontSmall.drawString("FPS: "+ofToString(ofGetFrameRate(),0),mainWindowWidth * 0.8f,mainWindowHeight * 0.15f);
+    textFontLarge.drawString(elapsedTime,mainWindowWidth * 0.1f,mainWindowHeight * 0.79f);
+    textFontLarge.drawString("-"+remainingTime,mainWindowWidth * 0.71f,mainWindowHeight * 0.79f);
 
+	//draw audio files list
+	ofPushMatrix();
+		ofTranslate(mainWindowWidth*0.1f, mainWindowHeight*0.3f);
+		ofSetColor(0);
+		ofRectangle bellRect = textFontMedium.getStringBoundingBox(soundFileNamesList,0,0);
+		bellRect.scaleFromCenter(1.1f);
+		ofDrawRectRounded(bellRect, 10);
+		ofSetColor(255,255,255,255);
+		textFontMedium.drawString(soundFileNamesList,0,0);
+	ofPopMatrix();
+
+	//if bell is playing, display sound file name
+	if (bellState == 1){
+		textFontLarge.drawString(bellFileName,mainWindowWidth*0.1f,mainWindowHeight * 0.69f);
+	}
+	//display sound file progress
     ofRectangle soundProgress;
     soundProgress.x = mainWindowWidth*0.1f;
     soundProgress.y = mainWindowHeight * 0.65f;
@@ -322,6 +329,8 @@ void ofApp::draw(){
     ofFill();
     ofDrawRectangle(soundProgress);
 
+
+	//display video playlist progress
     ofRectangle progressBar;
     
     progressBar.x = mainWindowWidth * 0.1f;
@@ -459,7 +468,7 @@ void ofApp::playBell(unsigned int b){
 				sound.load(soundsDir.getPath(b));
 				bellFileName = soundsDir.getPath(b);
 				bellFileName = ofFilePath::getBaseName(bellFileName);
-				ofLog()<<"playing: "<<bellFileName<<endl;
+				ofLog()<<"playing: "<<soundsDir.getName(b)<<endl;
 				sound.play();
 				sound.setLoop(false);
 				sound.setPan(1.0f);

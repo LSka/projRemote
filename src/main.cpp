@@ -10,23 +10,23 @@ int main( ){
 	ctlWinSettings.title = "Control Window";
 	ctlWinSettings.monitor = 0;
 
-    ctlWinSettings.windowMode = OF_WINDOW;
+    ctlWinSettings.windowMode = OF_GAME_MODE;
 	ctlWinSettings.decorated = false;
-	ctlWinSettings.setSize(640,400);
+	ctlWinSettings.setSize(1280,800);
     shared_ptr<ofAppBaseWindow> mainWindow = ofCreateWindow(ctlWinSettings);
     mainWindow->setWindowPosition(0, 0);
-   // mainWindow->setFullscreen(true);
+    mainWindow->setFullscreen(true);
 
 	ofGLFWWindowSettings projWinSettings;
 	projWinSettings.title = "Projection Window";
 	projWinSettings.shareContextWith = mainWindow;
 	projWinSettings.decorated = false;
 	projWinSettings.monitor = 1;
-	projWinSettings.setSize(640, 360);
+	projWinSettings.setSize(1920, 1080);
     shared_ptr<ofAppBaseWindow> projectorWindow = ofCreateWindow(projWinSettings);
     projectorWindow->setVerticalSync(true);
-   // projectorWindow->setWindowPosition(1281,0);
-   // projectorWindow->setFullscreen(true);
+    projectorWindow->setWindowPosition(1281,0);
+    projectorWindow->setFullscreen(true);
     
     
     shared_ptr<ofApp> mainApp(new ofApp);

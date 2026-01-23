@@ -71,11 +71,13 @@ public:
 	unsigned int oscPort;
 	int bellState;
 
-    ofTrueTypeFont  verdana;
-    ofTrueTypeFont  verdanaSmall;
+    ofTrueTypeFont  textFontLarge;
+    ofTrueTypeFont  textFontMedium;
+	ofTrueTypeFont	textFontSmall;
     string elapsedTime;
     string remainingTime;
-    
+	string soundFileNamesList;
+
     ofParameterGroup parameters;
 
     ofxPJControl projector;
